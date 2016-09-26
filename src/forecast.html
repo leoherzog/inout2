@@ -1,0 +1,7 @@
+<script>
+function refreshForecast() {
+  document.getElementById("forecast").innerHTML = '';
+  console.log("Refreshing forecast...");
+  document.getElementById("forecast").innerHTML = '<iframe id="forecast-embed" type="text/html" frameborder="0" height="240px" width="100%" src="https://forecast.io/embed/#lat=' + config.weatherLat + '&lon=' + config.weatherLon + '&name=' + config.cityName + '&font=Georgia&refresh=' + new Date().getTime() + '" seamless></iframe>';
+}
+</script>

@@ -1,0 +1,250 @@
+<script>
+
+function buildTable() {
+  
+  var tableBody = document.getElementById("tbodyList");
+  
+  for (var i = 0; i < config.people.length; i++) {
+    
+    var row = tableBody.insertRow(-1); // add new row to the bottom
+    row.id = config.people[i].id; // make the id of the row the id from the config above
+    var cell0 = row.insertCell(0);
+    cell0.className = "text-muted"; // grey out the contents
+    if (config.showExt) {
+      cell0.innerHTML += '<span class="label label-default">' + config.people[i].ext + '</span> '
+    }
+    cell0.innerHTML += config.people[i].name; // set their name and ext from the config
+    row.insertCell(1); // blank cell with future location
+    row.insertCell(2); // blank cell with future duration
+    
+  }
+  
+}
+
+function refreshList() {
+  
+  console.log("Refreshing table...");
+  
+  for (var i = 0; i < config.people.length; i++) { // go through the list of people in the config...
+    
+    var id = config.people[i].id;
+    
+    google.script.run.withSuccessHandler(fillOutTable).checkIfBusy(id); // ...and run a fillOutTable for each one
+    
+  }
+  
+}
+
+function fillOutTable(freeBusyDetails) {
+  
+  var busy = freeBusyDetails.busy;
+  
+  if (typeof busy !== 'boolean') { // "busy" will either contain true, false, or an error...
+    return busy; // return if error
+  }
+  
+  var id = freeBusyDetails.id;
+  var thisPersonsRow = document.getElementById(id);
+  
+  for (var i = 0; i < config.people.length; i++) { // go through each person in the config
+    if (config.people[i].id == id) { // if their id matches the id we're working with
+      var personsName = config.people[i].name; // grab their name from the config
+      var personsExt = config.people[i].ext; //grab their id from the config
+      break;
+    }
+  }
+  
+  if (busy === false) { // they aren't busy right now
+    
+    // if you were free during the last check, finish this line and move on
+    if (thisPersonsRow.cells[0].className == "text-success") {
+      return;
+    }
+    
+    // they might have data from the last refresh. clear it out
+    thisPersonsRow.cells[0].className = "text-success";
+    thisPersonsRow.cells[0].innerHTML = "";
+    if (config.showExt) {
+      thisPersonsRow.cells[0].innerHTML += '<span class="label label-success animated flash">' + personsExt + '</span> ';
+    }
+    thisPersonsRow.cells[0].innerHTML += personsName;
+    thisPersonsRow.cells[1].innerHTML = "";
+    thisPersonsRow.cells[2].innerHTML = "";
+    
+    return;
+    
+  } else {
+    
+    var eventName = freeBusyDetails.eventDetails.name;
+    var eventLocation = freeBusyDetails.eventDetails.location;
+    var eventStart = freeBusyDetails.eventDetails.startTime;
+    var eventEnd = freeBusyDetails.eventDetails.endTime;
+    var isMarkedAsAllDayEvent = freeBusyDetails.eventDetails.allDay;
+    var lastLocation = thisPersonsRow.cells[1].innerHTML;
+    var lastDuration = thisPersonsRow.cells[2].innerHTML;
+    
+    // take the date string and make it into a moment to make formatting and comparisons and manipulation easy
+    eventStart = moment(eventStart);
+    eventEnd = moment(eventEnd);
+    
+    // build the string that goes in the 'duration' box in the ui
+    var eventDuration = "";
+    if (isMarkedAsAllDayEvent && (eventEnd.diff(eventStart, 'days') <= 6)) { // event is all-day and less than a week away
+      
+      // all-day events that end on a weekend... adjust to say they're returning the following monday
+      if (eventEnd.format("dddd") == "Saturday") {
+        eventEnd.add(2, "days");
+      } else if (eventEnd.format("dddd") == "Sunday") {
+        eventEnd.add(1, "days");
+      }
+      
+      eventDuration = "Back on " + eventEnd.format("dddd");
+      
+    } else if (isMarkedAsAllDayEvent && (eventEnd.diff(eventStart, 'days') > 6)) {
+      
+      if (eventEnd.format("dddd") == "Friday") {
+        eventEnd.add(3, "days");
+      } else if (eventEnd.format("dddd") == "Saturday") {
+        eventEnd.add(2, "days");
+      } else if (eventEnd.format("dddd") == "Sunday") {
+        eventEnd.add(1, "days");
+      }
+      
+      eventDuration = "Back " + eventEnd.format("dddd, MMMM Do");
+      
+    } else if (eventEnd.diff(eventStart, 'days') > 0) { // is multi-day event WITH time
+      
+      eventDuration = eventStart.format("dddd, MMMM Do (h:mm a)") + " until " + eventEnd.format("dddd, MMMM Do (h:mm a)");
+      
+    } else if ((eventStart.hour() <= 8) && (eventEnd.hour() >= 17)) { // event is sometime before 9 until sometime after 5
+    
+      eventDuration = "All day";
+    
+    } else { // not an all-day event AND doesn't span multiple days
+      
+      eventDuration = eventStart.format("h:mm a") + " until " + eventEnd.format("h:mm a");
+      
+    }
+    
+    // this block looks to see if the name or location of the event is "available"
+    // if it is, change their name back to green
+    var nameClass = "text-danger";
+    if ((eventName && (eventName.toLowerCase().includes("available") || eventName.toLowerCase().includes("free"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("available") || eventLocation.toLowerCase().includes("free")))) {
+      nameClass = "text-success"; // change their status code back to green ONLY
+    }
+    
+    // this block looks for long addresses with the city name (config.) in it and chops it off
+    // google calendar's autocomplete makes locations really long
+    if (eventLocation && eventLocation.toLowerCase().includes(", " + config.cityName.toLowerCase())) {
+      eventLocation = eventLocation.substring(0, eventLocation.indexOf(", " + config.cityName));
+    }
+    
+    // if the event is named or located at 'vacation', 'trip', 'travel', or 'conference', mark an icon next to their name
+    if ((eventName && (eventName.toLowerCase().includes("vacation") || eventName.toLowerCase().includes("trip") || eventName.toLowerCase().includes("travel"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("vacation") || eventLocation.toLowerCase().includes("trip") || eventLocation.toLowerCase().includes("travel")))) {
+      personsName = "&#9992; " + personsName;
+    }
+    // if the event is named or located at 'sick', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("sick")) || (eventLocation && (eventLocation.toLowerCase().includes("sick")))) {
+      personsName = "&#129298; " + personsName;
+    }
+    // if the event is named or located at 'doctor', 'medical', 'surgery', or 'hospital', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("doctor") || eventName.toLowerCase().includes("medical") || eventName.toLowerCase().includes("surgery") || eventName.toLowerCase().includes("hospital"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("doctor") || eventLocation.toLowerCase().includes("medical") || eventLocation.toLowerCase().includes("surgery") || eventLocation.toLowerCase().includes("hospital")))) {
+      personsName = "&#127973; " + personsName;
+    }
+    // if the event is named or located at 'dentist', 'dental', or 'ortho', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("dentist") || eventName.toLowerCase().includes("dental") || eventName.toLowerCase().includes("ortho"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("dentist") || eventLocation.toLowerCase().includes("dental") || eventLocation.toLowerCase().includes("ortho")))) {
+      personsName = "&#128556; " + personsName;
+    }
+    // if the event is named or located at 'phone' or 'call', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("phone") || eventName.toLowerCase().includes("call"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("phone") || eventLocation.toLowerCase().includes("call")))) {
+      personsName = "&#128222; " + personsName;
+    }
+    // if the event is named or located at 'chapel', 'gathering', or 'dimnent', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("chapel") || eventName.toLowerCase().includes("gathering") || eventName.toLowerCase().includes("dimnent"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("gathering") || eventLocation.toLowerCase().includes("dimnent")))) {
+      personsName = "&#9962; " + personsName;
+    }
+    // if the event is named or located at 'workout', 'gym', or 'sport' mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("workout") || eventName.toLowerCase().includes("gym") || eventName.toLowerCase().includes("sport"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
+      personsName = "&#127947; " + personsName;
+    }
+    // if the event is named or located at 'walk' (which captures 'walking'), mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("walk")) || (eventLocation && (eventLocation.toLowerCase().includes("walk")))) {
+      personsName = "&#128694; " + personsName;
+    }
+    // if the event is named or located at 'tennis', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("tennis")) || (eventLocation && (eventLocation.toLowerCase().includes("tennis")))) {
+      personsName = "&#127934; " + personsName;
+    }
+    // if the event is named or located at 'football', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("football")) || (eventLocation && (eventLocation.toLowerCase().includes("football")))) {
+      personsName = "&#127944; " + personsName;
+    }
+    // if the event is named or located at 'baseball', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("baseball")) || (eventLocation && (eventLocation.toLowerCase().includes("baseball")))) {
+      personsName = "&#9918; " + personsName;
+    }
+    // if the event is named or located at 'basketball', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("basketball")) || (eventLocation && (eventLocation.toLowerCase().includes("basketball")))) {
+      personsName = "&#127936; " + personsName;
+    }
+    // if the event is named or located at 'soccer' or 'futbol', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("soccer") || eventName.toLowerCase().includes("futbol"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("soccer") || eventLocation.toLowerCase().includes("futbol")))) {
+      personsName = "&#9917; " + personsName;
+    }
+    // if the event is named or located at 'volleyball', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("volleyball")) || (eventLocation && (eventLocation.toLowerCase().includes("volleyball")))) {
+      personsName = "&#127952; " + personsName;
+    }
+    // if the event is named or located at 'golf', mark an icon next to their name
+    else if ((eventName && eventName.toLowerCase().includes("golf")) || (eventLocation && (eventLocation.toLowerCase().includes("golf")))) {
+      personsName = "&#127948; " + personsName;
+    }
+    // if the event is named or located at 'swim' or 'pool', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("swim") || eventName.toLowerCase().includes("pool"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("swim") || eventLocation.toLowerCase().includes("pool")))) {
+      personsName = "&#127946; " + personsName;
+    }
+        
+    if (!eventLocation) {
+      eventLocation = eventName;
+    }
+    
+    // HTML-ize the string
+    if (eventLocation) {
+      eventLocation = eventLocation.replace("&", "&amp;");
+      eventLocation = eventLocation.replace('"', "&quot;");
+      eventLocation = eventLocation.replace("<", "&lt;");
+      eventLocation = eventLocation.replace(">", "&gt;");
+    }
+        
+    // if the event details haven't changed from the last check to now, finish this line and move on
+    if ((lastLocation.includes(eventName) || lastLocation.includes(eventLocation)) && lastDuration == eventDuration) {
+      
+      return;
+      
+    } else { // new details have come to light
+    
+      thisPersonsRow.cells[0].className = nameClass;
+      thisPersonsRow.cells[0].innerHTML = "";
+      if (config.showExt) {
+        thisPersonsRow.cells[0].innerHTML += '<span class="label label-danger animated flash">' + personsExt + '</span> ';
+      }
+      thisPersonsRow.cells[0].innerHTML += personsName;
+      thisPersonsRow.cells[1].innerHTML = eventLocation;
+      thisPersonsRow.cells[2].innerHTML = eventDuration;
+      
+    }
+    
+  }
+  
+}
+
+</script>
