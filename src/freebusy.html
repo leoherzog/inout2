@@ -226,7 +226,7 @@ function fillOutTable(freeBusyDetails) {
     }
         
     // if the event details haven't changed from the last check to now, finish this line and move on
-    if ((lastLocation.includes(eventName) || lastLocation.includes(eventLocation)) && lastDuration == eventDuration) {
+    if (((lastLocation.includes(eventName) || lastLocation.includes(eventLocation)) || (!eventName && !eventLocation)) && lastDuration == eventDuration) {
       
       return;
       
