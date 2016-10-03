@@ -50,17 +50,26 @@ function checkIfBusy(id) {
     
   } else { // go through the logic of determining which event (if any) should be returned
     
-    // build an array of event objects that are set to 'busy' status
+    // build an array of event objects that are set to 'busy' status that I'm attending
     var busyEvents = [];
     
-    for (var i = 0; i < events.length; i++) {
+    for (var i in events) { // go through each event
       
       var eventId = events[i].id;
-      
       var verboseEvent = Calendar.Events.get(id, eventId); // use the advanced calendar service to grab all the event's deets
       
       if (!verboseEvent.transparency) { // if the event is 'busy', not 'available'
-        busyEvents.push(verboseEvent);
+        
+        for (var j in verboseEvent.attendees) { // go through the attendees of the event to find "self"
+          
+          if (verboseEvent.attendees[j].self && verboseEvent.attendees[j].responseStatus != "declined") { // check the "self" attendee and see if it's declined the event. If I haven't...
+            
+            busyEvents.push(verboseEvent); // add the event to our array
+            
+          }
+        
+        }
+        
       }
     
     }
@@ -92,7 +101,7 @@ function checkIfBusy(id) {
                
       var selectedEvent = busyEvents[0]; // select the first busy event in the array
       
-      for (var i = 0; i < busyEvents.length; i++) { // go through each busy event
+      for (var i in busyEvents) { // go through each busy event
         
         if (busyEvents[i].end.dateTime == null) { // (if there's an all-day/multi-day event, it may not have a dateTime... just a date)
           busyEvents[i].end.dateTime = busyEvents[i].end.date + "T00:00:00-05:00"; // (this converts that date to a dateTime for the comparison below)
