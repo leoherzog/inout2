@@ -60,14 +60,24 @@ function checkIfBusy(id) {
       
       if (!verboseEvent.transparency) { // if the event is 'busy', not 'available'
         
-        for (var j in verboseEvent.attendees) { // go through the attendees of the event to find "self"
+        Logger.log(verboseEvent);
+        
+        if (!verboseEvent.attendees) { // events with just one person don't have attendees, so
           
-          if (verboseEvent.attendees[j].self && verboseEvent.attendees[j].responseStatus != "declined") { // check the "self" attendee and see if it's declined the event. If I haven't...
+          busyEvents.push(verboseEvent); // add the event to our array
+        
+        } else { // event with multiple people? we gotta check to make sure we haven't declined the event
+        
+          for (var j in verboseEvent.attendees) { // go through the attendees of the event to find "self"
             
-            busyEvents.push(verboseEvent); // add the event to our array
+            if (verboseEvent.attendees[j].self && verboseEvent.attendees[j].responseStatus != "declined") { // check the "self" attendee and see if it's declined the event. If I haven't...
+              
+              busyEvents.push(verboseEvent); // add the event to our array
+              
+            }
             
           }
-        
+          
         }
         
       }
