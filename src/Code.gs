@@ -60,8 +60,6 @@ function checkIfBusy(id) {
       
       if (!verboseEvent.transparency) { // if the event is 'busy', not 'available'
         
-        Logger.log(verboseEvent);
-        
         if (!verboseEvent.attendees) { // events with just one person don't have attendees, so
           
           busyEvents.push(verboseEvent); // add the event to our array
