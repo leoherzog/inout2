@@ -159,9 +159,9 @@ function fillOutTable(freeBusyDetails) {
     (eventLocation && (eventLocation.toLowerCase().includes("dentist") || eventLocation.toLowerCase().includes("dental") || eventLocation.toLowerCase().includes("ortho")))) {
       personsName = "&#128556; " + personsName;
     }
-    // if the event is named or located at 'phone' or 'call', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("phone") || eventName.toLowerCase().includes("call"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("phone") || eventLocation.toLowerCase().includes("call")))) {
+    // if the event is named or located at 'phone', 'call', 'skype', 'webex', 'gotomeeting', or 'hangouts', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("phone") || eventName.toLowerCase().includes("call") || eventName.toLowerCase().includes("skype") || eventName.toLowerCase().includes("webex") || eventName.toLowerCase().includes("gotomeeting") || eventName.toLowerCase().includes("hangouts"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("phone") || eventLocation.toLowerCase().includes("call") || eventLocation.toLowerCase().includes("skype") || eventLocation.toLowerCase().includes("webex") || eventLocation.toLowerCase().includes("gotomeeting") || eventLocation.toLowerCase().includes("hangouts")))) {
       personsName = "&#128222; " + personsName;
     }
     // if the event is named or located at 'chapel', 'gathering', or 'dimnent', mark an icon next to their name
