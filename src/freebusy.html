@@ -169,10 +169,15 @@ function fillOutTable(freeBusyDetails) {
     (eventLocation && (eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("gathering") || eventLocation.toLowerCase().includes("dimnent")))) {
       personsName = "&#9962; " + personsName;
     }
-    // if the event is named or located at 'workout', 'gym', or 'sport' mark an icon next to their name
+    // if the event is named or located at 'workout', 'gym', or 'sport', mark an icon next to their name
     else if ((eventName && (eventName.toLowerCase().includes("workout") || eventName.toLowerCase().includes("gym") || eventName.toLowerCase().includes("sport"))) ||
     (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
       personsName = "&#127947; " + personsName;
+    }
+    // if the event is named or located at 'breakfast', 'lunch', 'dinner', 'food', or 'eat', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("breakfast") || eventName.toLowerCase().includes("lunch") || eventName.toLowerCase().includes("dinner") || eventName.toLowerCase().includes("food") || eventName.toLowerCase().includes("eat"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("breakfast") || eventLocation.toLowerCase().includes("lunch") || eventLocation.toLowerCase().includes("dinner") || eventLocation.toLowerCase().includes("food") || eventLocation.toLowerCase().includes("eat")))) {
+      personsName = "&#127869; " + personsName;
     }
     // if the event is named or located at 'walk' (which captures 'walking'), mark an icon next to their name
     else if ((eventName && eventName.toLowerCase().includes("walk")) || (eventLocation && (eventLocation.toLowerCase().includes("walk")))) {
