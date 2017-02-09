@@ -115,7 +115,6 @@ function fillOutTable(freeBusyDetails) {
     } else if (eventEnd.diff(eventStart, 'days') > 0) { // is multi-day event WITH time
       
       if (eventEnd.format("ddd") == "Fri" && eventEnd.hour() >= 17) {
-        console.log("Hey!");
         eventEnd.add(2, "days");
       } else if (eventEnd.format("ddd") == "Sat") {
         eventEnd.add(1, "days");
