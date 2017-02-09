@@ -102,19 +102,19 @@ function fillOutTable(freeBusyDetails) {
       
     } else if (isMarkedAsAllDayEvent && (eventEnd.diff(eventStart, 'days') > 6)) {
       
-      if (eventEnd.format("dddd") == "Friday") {
+      if (eventEnd.format("ddd") == "Fri") {
         eventEnd.add(3, "days");
-      } else if (eventEnd.format("dddd") == "Saturday") {
+      } else if (eventEnd.format("ddd") == "Sat") {
         eventEnd.add(2, "days");
-      } else if (eventEnd.format("dddd") == "Sunday") {
+      } else if (eventEnd.format("ddd") == "Sun") {
         eventEnd.add(1, "days");
       }
       
-      eventDuration = "Back " + eventEnd.format("dddd, MMMM Do");
+      eventDuration = "Back on " + eventEnd.format("ddd, MMMM Do");
       
     } else if (eventEnd.diff(eventStart, 'days') > 0) { // is multi-day event WITH time
       
-      eventDuration = eventStart.format("dddd, MMMM Do (h:mm a)") + " until " + eventEnd.format("dddd, MMMM Do (h:mm a)");
+      eventDuration = eventStart.format("ddd, MMMM Do (h:mm a)") + " until " + eventEnd.format("dddd, MMMM Do (h:mm a)");
       
     } else if ((eventStart.hour() <= 8) && (eventEnd.hour() >= 17)) { // event is sometime before 9 until sometime after 5
     
