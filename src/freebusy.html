@@ -114,7 +114,14 @@ function fillOutTable(freeBusyDetails) {
       
     } else if (eventEnd.diff(eventStart, 'days') > 0) { // is multi-day event WITH time
       
-      eventDuration = eventStart.format("ddd, MMMM Do (h:mm a)") + " until " + eventEnd.format("dddd, MMMM Do (h:mm a)");
+      if (eventEnd.format("ddd") == "Fri" && eventEnd.hour() >= 17) {
+        console.log("Hey!");
+        eventEnd.add(2, "days");
+      } else if (eventEnd.format("ddd") == "Sat") {
+        eventEnd.add(1, "days");
+      }
+      
+      eventDuration = "Back on " + eventEnd.format("ddd, MMMM Do (h:mm a)");
       
     } else if ((eventStart.hour() <= 8) && (eventEnd.hour() >= 17)) { // event is sometime before 9 until sometime after 5
     
