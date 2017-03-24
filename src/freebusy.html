@@ -92,13 +92,17 @@ function fillOutTable(freeBusyDetails) {
     if (isMarkedAsAllDayEvent && (eventEnd.diff(eventStart, 'days') <= 6)) { // event is all-day and less than a week away
       
       // all-day events that end on a weekend... adjust to say they're returning the following monday
-      if (eventEnd.format("dddd") == "Saturday") {
+      if (eventEnd.format("ddd") == "Sat") {
         eventEnd.add(2, "days");
-      } else if (eventEnd.format("dddd") == "Sunday") {
+      } else if (eventEnd.format("ddd") == "Sun") {
         eventEnd.add(1, "days");
       }
       
       eventDuration = "Back on " + eventEnd.format("dddd");
+      
+    } else if (eventEnd.format("ddd") == "Fri" && eventEnd.hour() >= 17) { // event ends sometime at or after 5 on a Friday
+    
+      eventDuration = "Back on Monday";
       
     } else if (isMarkedAsAllDayEvent && (eventEnd.diff(eventStart, 'days') > 6)) {
       
@@ -122,7 +126,7 @@ function fillOutTable(freeBusyDetails) {
       
       eventDuration = "Back on " + eventEnd.format("ddd, MMMM Do (h:mm a)");
       
-    } else if ((eventStart.hour() <= 8) && (eventEnd.hour() >= 17)) { // event is sometime before 9 until sometime after 5
+    } else if (eventStart.hour() <= 8 && eventEnd.hour() >= 17) { // event is sometime before 9 until sometime after 5
     
       eventDuration = "All day";
     
