@@ -136,7 +136,7 @@ function fillOutTable(freeBusyDetails) {
       
     }
     
-    // this block looks to see if the name or location of the event is "available" (but not "unavailable")
+    // this block looks to see if the name or location of the event is 'available' (but not 'unavailable')
     // if it is, change their name back to green
     var nameClass = "text-danger";
     if ((eventName && (eventName.toLowerCase().includes("free") || (eventName.toLowerCase().includes("available") && !eventName.toLowerCase().includes("unavailable")))) ||
@@ -176,7 +176,7 @@ function fillOutTable(freeBusyDetails) {
     }
     // if the event is named or located at 'church', 'chapel', or 'dimnent', mark an icon next to their name
     else if ((eventName && (eventName.toLowerCase().includes("church") || eventName.toLowerCase().includes("chapel") || eventName.toLowerCase().includes("dimnent"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("church") || eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("dimnent")))) {
+    (eventLocation && (eventName.toLowerCase().includes("church") || eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("dimnent")))) {
       personsName = "&#9962; " + personsName;
     }
     // if the event is named or located at 'breakfast', 'lunch', 'dinner', 'food', or 'eat', mark an icon next to their name
@@ -227,17 +227,14 @@ function fillOutTable(freeBusyDetails) {
     (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
       personsName = "&#127947; " + personsName;
     }
-    
+        
     if (!eventLocation) {
       eventLocation = eventName;
     }
     
-    // HTML-ize the string
+    // sanitize the string
     if (eventLocation) {
-      eventLocation = eventLocation.replace("&", "&amp;");
-      eventLocation = eventLocation.replace('"', "&quot;");
-      eventLocation = eventLocation.replace("<", "&lt;");
-      eventLocation = eventLocation.replace(">", "&gt;");
+      eventLocation = sanitizeHTML(eventLocation);
     }
         
     // if the event details haven't changed from the last check to now, finish this line and move on
@@ -260,6 +257,14 @@ function fillOutTable(freeBusyDetails) {
     
   }
   
+}
+
+// http://stackoverflow.com/a/12034334
+function sanitizeHTML(string) {
+  var entityMap = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'};
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
 }
 
 </script>
