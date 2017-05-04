@@ -49,7 +49,7 @@ function fillOutTable(freeBusyDetails) {
   for (var i = 0; i < config.people.length; i++) { // go through each person in the config
     if (config.people[i].id == id) { // if their id matches the id we're working with
       var personsName = config.people[i].name; // grab their name from the config
-      var personsExt = config.people[i].ext; // grab their id from the config
+      var personsExt = config.people[i].ext; // grab their ext from the config
       break;
     }
   }
@@ -136,16 +136,16 @@ function fillOutTable(freeBusyDetails) {
       
     }
     
-    // this block looks to see if the name or location of the event is "available"
+    // this block looks to see if the name or location of the event is "available" (but not "unavailable")
     // if it is, change their name back to green
     var nameClass = "text-danger";
-    if ((eventName && (eventName.toLowerCase().includes("available") || eventName.toLowerCase().includes("free"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("available") || eventLocation.toLowerCase().includes("free")))) {
+    if ((eventName && (eventName.toLowerCase().includes("free") || (eventName.toLowerCase().includes("available") && !eventName.toLowerCase().includes("unavailable")))) ||
+    ((eventLocation && (eventLocation.toLowerCase().includes("free") || (eventLocation.toLowerCase().includes("available") && !eventLocation.toLowerCase().includes("unavailable")))))) {
       nameClass = "text-success"; // change their status code back to green ONLY
     }
     
     // this block looks for long addresses with the city name (config.) in it and chops it off
-    // google calendar's autocomplete makes locations really long
+    // google calendar's autocomplete in the client ui makes locations really long
     if (eventLocation && eventLocation.toLowerCase().includes(", " + config.cityName.toLowerCase())) {
       eventLocation = eventLocation.substring(0, eventLocation.indexOf(", " + config.cityName));
     }
@@ -174,15 +174,10 @@ function fillOutTable(freeBusyDetails) {
     (eventLocation && (eventLocation.toLowerCase().includes("phone") || eventLocation.toLowerCase().includes("call") || eventLocation.toLowerCase().includes("skype") || eventLocation.toLowerCase().includes("webex") || eventLocation.toLowerCase().includes("gotomeeting") || eventLocation.toLowerCase().includes("hangouts")))) {
       personsName = "&#128222; " + personsName;
     }
-    // if the event is named or located at 'chapel', 'gathering', or 'dimnent', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("chapel") || eventName.toLowerCase().includes("gathering") || eventName.toLowerCase().includes("dimnent"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("gathering") || eventLocation.toLowerCase().includes("dimnent")))) {
+    // if the event is named or located at 'church', 'chapel', or 'dimnent', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("church") || eventName.toLowerCase().includes("chapel") || eventName.toLowerCase().includes("dimnent"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("church") || eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("dimnent")))) {
       personsName = "&#9962; " + personsName;
-    }
-    // if the event is named or located at 'workout', 'gym', or 'sport', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("workout") || eventName.toLowerCase().includes("gym") || eventName.toLowerCase().includes("sport"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
-      personsName = "&#127947; " + personsName;
     }
     // if the event is named or located at 'breakfast', 'lunch', 'dinner', 'food', or 'eat', mark an icon next to their name
     else if ((eventName && (eventName.toLowerCase().includes("breakfast") || eventName.toLowerCase().includes("lunch") || eventName.toLowerCase().includes("dinner") || eventName.toLowerCase().includes("food") || eventName.toLowerCase().includes("eat"))) ||
@@ -227,7 +222,12 @@ function fillOutTable(freeBusyDetails) {
     (eventLocation && (eventLocation.toLowerCase().includes("swim") || eventLocation.toLowerCase().includes("pool")))) {
       personsName = "&#127946; " + personsName;
     }
-        
+    // generic catch-all. if the event is named or located at 'workout', 'gym', or 'sport', mark an icon next to their name
+    else if ((eventName && (eventName.toLowerCase().includes("workout") || eventName.toLowerCase().includes("gym") || eventName.toLowerCase().includes("sport"))) ||
+    (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
+      personsName = "&#127947; " + personsName;
+    }
+    
     if (!eventLocation) {
       eventLocation = eventName;
     }
