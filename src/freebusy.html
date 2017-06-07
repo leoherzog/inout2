@@ -4,7 +4,7 @@ function buildTable() {
   
   var tableBody = document.getElementById("tbodyList");
   
-  for (var i = 0; i < config.people.length; i++) {
+  for (var i in config.people) {
     
     var row = tableBody.insertRow(-1); // add new row to the bottom
     row.id = config.people[i].id; // make the id of the row the id from the config above
@@ -233,11 +233,13 @@ function fillOutTable(freeBusyDetails) {
     }
     
     // sanitize the string
+    // also sanitize the last string, so we can compare and look for changes next
     if (eventLocation) {
       eventLocation = sanitizeHTML(eventLocation);
+      lastLocation = sanitizeHTML(lastLocation);
     }
         
-    // if the event details haven't changed from the last check to now, finish this line and move on
+    // if the event details haven't changed from the last check to now, finish this row and move on
     if (((lastLocation.includes(eventName) || lastLocation.includes(eventLocation)) || (!eventName && !eventLocation)) && lastDuration == eventDuration) {
       
       return;
