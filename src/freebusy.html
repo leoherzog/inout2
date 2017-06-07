@@ -25,7 +25,7 @@ function refreshList() {
   
   console.log("Refreshing table...");
   
-  for (var i = 0; i < config.people.length; i++) { // go through the list of people in the config...
+  for (var i in config.people) { // go through the list of people in the config...
     
     var id = config.people[i].id;
     
@@ -46,7 +46,7 @@ function fillOutTable(freeBusyDetails) {
   var id = freeBusyDetails.id;
   var thisPersonsRow = document.getElementById(id);
   
-  for (var i = 0; i < config.people.length; i++) { // go through each person in the config
+  for (var i in config.people) { // go through each person in the config
     if (config.people[i].id == id) { // if their id matches the id we're working with
       var personsName = config.people[i].name; // grab their name from the config
       var personsExt = config.people[i].ext; // grab their ext from the config
