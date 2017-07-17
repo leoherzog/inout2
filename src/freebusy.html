@@ -254,7 +254,7 @@ function fillOutTable(freeBusyDetails) {
       }
       thisPersonsRow.cells[0].innerHTML += personsName;
       // before we put the original string into the DOM,
-      // sanitize it so people can't put rogue HTML in their names
+      // sanitize it so people can't put rogue HTML in their event details
       eventLocation = sanitizeHTML(eventLocation);
       thisPersonsRow.cells[1].innerHTML = eventLocation;
       thisPersonsRow.cells[2].innerHTML = eventDuration;
