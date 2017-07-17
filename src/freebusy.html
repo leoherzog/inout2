@@ -232,16 +232,17 @@ function fillOutTable(freeBusyDetails) {
       eventLocation = eventName;
     }
     
-    // sanitize the string
-    // also sanitize the last string, so we can compare and look for changes next
-    if (eventLocation) {
-      eventLocation = sanitizeHTML(eventLocation);
-      lastLocation = sanitizeHTML(lastLocation);
+    // if there's no event name or location
+    if (!eventLocation) {
+      eventLocation = "Busy";
     }
+
+    // turn the HTML-ified lastLocation from the DOM back into the original string
+    lastLocation = desanitizeHTML(lastLocation);
         
     // if the event details haven't changed from the last check to now, finish this row and move on
-    if (((lastLocation.includes(eventName) || lastLocation.includes(eventLocation)) || (!eventName && !eventLocation)) && lastDuration == eventDuration) {
-      
+    if ((lastLocation == eventName || lastLocation == eventLocation) && lastDuration == eventDuration) {
+
       return;
       
     } else { // new details have come to light
@@ -252,6 +253,9 @@ function fillOutTable(freeBusyDetails) {
         thisPersonsRow.cells[0].innerHTML += '<span class="label label-danger animated flash">' + personsExt + '</span> ';
       }
       thisPersonsRow.cells[0].innerHTML += personsName;
+      // before we put the original string into the DOM,
+      // sanitize it so people can't put rogue HTML in their names
+      eventLocation = sanitizeHTML(eventLocation);
       thisPersonsRow.cells[1].innerHTML = eventLocation;
       thisPersonsRow.cells[2].innerHTML = eventDuration;
       
@@ -263,8 +267,33 @@ function fillOutTable(freeBusyDetails) {
 
 // http://stackoverflow.com/a/12034334
 function sanitizeHTML(string) {
-  var entityMap = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'};
-  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+  var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;",
+    "/": "&#x2F;",
+    "`": "&#x60;",
+    "=": "&#x3D;"
+  };
+  return String(string).replace(/[&<>"'`=\/]/g, function(s) {
+    return entityMap[s];
+  });
+}
+
+function desanitizeHTML(string) {
+  var entityMap = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": "\"",
+    "&#39;": "'",
+    "&#x2F;": "/",
+    "&#x60;": "`",
+    "&#x3D;": "="
+  };
+  return String(string).replace(/(&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;|&#x60;|&#x3D;)/g, function(s) {
     return entityMap[s];
   });
 }
