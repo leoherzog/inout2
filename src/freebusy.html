@@ -77,6 +77,7 @@ function fillOutTable(freeBusyDetails) {
     
     var eventName = freeBusyDetails.eventDetails.name;
     var eventLocation = freeBusyDetails.eventDetails.location;
+    var eventDescription = freeBusyDetails.eventDetails.description;
     var eventStart = freeBusyDetails.eventDetails.startTime;
     var eventEnd = freeBusyDetails.eventDetails.endTime;
     var isMarkedAsAllDayEvent = freeBusyDetails.eventDetails.allDay;
@@ -208,7 +209,12 @@ function fillOutTable(freeBusyDetails) {
         personsName = "&#127947; " + personsName;
         break;
     }
-        
+    
+    if (eventDescription &&
+      (eventDescription.toLowerCase().includes("use name") || eventDescription.toLowerCase().includes("use title"))) {
+      eventLocation = eventName;
+    }
+    
     if (!eventLocation) {
       eventLocation = eventName;
     }
