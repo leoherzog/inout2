@@ -150,82 +150,63 @@ function fillOutTable(freeBusyDetails) {
       eventLocation = eventLocation.substring(0, eventLocation.indexOf(", " + config.cityName));
     }
     
-    // if the event is named or located at 'vacation', 'trip', 'travel', or 'conference', mark an icon next to their name
-    if ((eventName && (eventName.toLowerCase().includes("vacation") || eventName.toLowerCase().includes("trip") || eventName.toLowerCase().includes("travel"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("vacation") || eventLocation.toLowerCase().includes("trip") || eventLocation.toLowerCase().includes("travel")))) {
-      personsName = "&#9992; " + personsName;
-    }
-    // if the event is named or located at 'sick', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("sick")) || (eventLocation && (eventLocation.toLowerCase().includes("sick")))) {
-      personsName = "&#129298; " + personsName;
-    }
-    // if the event is named or located at 'doctor', 'medical', 'surgery', or 'hospital', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("doctor") || eventName.toLowerCase().includes("medical") || eventName.toLowerCase().includes("surgery") || eventName.toLowerCase().includes("hospital"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("doctor") || eventLocation.toLowerCase().includes("medical") || eventLocation.toLowerCase().includes("surgery") || eventLocation.toLowerCase().includes("hospital")))) {
-      personsName = "&#127973; " + personsName;
-    }
-    // if the event is named or located at 'dentist', 'dental', or 'ortho', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("dentist") || eventName.toLowerCase().includes("dental") || eventName.toLowerCase().includes("ortho"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("dentist") || eventLocation.toLowerCase().includes("dental") || eventLocation.toLowerCase().includes("ortho")))) {
-      personsName = "&#128556; " + personsName;
-    }
-    // if the event is named or located at 'phone', 'call', 'skype', 'webex', 'gotomeeting', or 'hangouts', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("phone") || eventName.toLowerCase().includes("call") || eventName.toLowerCase().includes("skype") || eventName.toLowerCase().includes("webex") || eventName.toLowerCase().includes("gotomeeting") || eventName.toLowerCase().includes("hangouts"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("phone") || eventLocation.toLowerCase().includes("call") || eventLocation.toLowerCase().includes("skype") || eventLocation.toLowerCase().includes("webex") || eventLocation.toLowerCase().includes("gotomeeting") || eventLocation.toLowerCase().includes("hangouts")))) {
-      personsName = "&#128222; " + personsName;
-    }
-    // if the event is named or located at 'church', 'chapel', or 'dimnent', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("church") || eventName.toLowerCase().includes("chapel") || eventName.toLowerCase().includes("dimnent"))) ||
-    (eventLocation && (eventName.toLowerCase().includes("church") || eventLocation.toLowerCase().includes("chapel") || eventLocation.toLowerCase().includes("dimnent")))) {
-      personsName = "&#9962; " + personsName;
-    }
-    // if the event is named or located at 'breakfast', 'lunch', 'dinner', 'food', or 'eat', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("breakfast") || eventName.toLowerCase().includes("lunch") || eventName.toLowerCase().includes("dinner") || eventName.toLowerCase().includes("food") || eventName.toLowerCase().includes("eat"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("breakfast") || eventLocation.toLowerCase().includes("lunch") || eventLocation.toLowerCase().includes("dinner") || eventLocation.toLowerCase().includes("food") || eventLocation.toLowerCase().includes("eat")))) {
-      personsName = "&#127869; " + personsName;
-    }
-    // if the event is named or located at 'walk' (which captures 'walking'), mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("walk")) || (eventLocation && (eventLocation.toLowerCase().includes("walk")))) {
-      personsName = "&#128694; " + personsName;
-    }
-    // if the event is named or located at 'tennis', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("tennis")) || (eventLocation && (eventLocation.toLowerCase().includes("tennis")))) {
-      personsName = "&#127934; " + personsName;
-    }
-    // if the event is named or located at 'football', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("football")) || (eventLocation && (eventLocation.toLowerCase().includes("football")))) {
-      personsName = "&#127944; " + personsName;
-    }
-    // if the event is named or located at 'baseball', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("baseball")) || (eventLocation && (eventLocation.toLowerCase().includes("baseball")))) {
-      personsName = "&#9918; " + personsName;
-    }
-    // if the event is named or located at 'basketball', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("basketball")) || (eventLocation && (eventLocation.toLowerCase().includes("basketball")))) {
-      personsName = "&#127936; " + personsName;
-    }
-    // if the event is named or located at 'soccer' or 'futbol', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("soccer") || eventName.toLowerCase().includes("futbol"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("soccer") || eventLocation.toLowerCase().includes("futbol")))) {
-      personsName = "&#9917; " + personsName;
-    }
-    // if the event is named or located at 'volleyball', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("volleyball")) || (eventLocation && (eventLocation.toLowerCase().includes("volleyball")))) {
-      personsName = "&#127952; " + personsName;
-    }
-    // if the event is named or located at 'golf', mark an icon next to their name
-    else if ((eventName && eventName.toLowerCase().includes("golf")) || (eventLocation && (eventLocation.toLowerCase().includes("golf")))) {
-      personsName = "&#127948; " + personsName;
-    }
-    // if the event is named or located at 'swim' or 'pool', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("swim") || eventName.toLowerCase().includes("pool"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("swim") || eventLocation.toLowerCase().includes("pool")))) {
-      personsName = "&#127946; " + personsName;
-    }
-    // generic catch-all. if the event is named or located at 'workout', 'gym', or 'sport', mark an icon next to their name
-    else if ((eventName && (eventName.toLowerCase().includes("workout") || eventName.toLowerCase().includes("gym") || eventName.toLowerCase().includes("sport"))) ||
-    (eventLocation && (eventLocation.toLowerCase().includes("workout") || eventLocation.toLowerCase().includes("gym") || eventLocation.toLowerCase().includes("sport")))) {
-      personsName = "&#127947; " + personsName;
+    // make a new variable to check for icons
+    var iconchecker = eventName + " " + eventLocation;
+    switch (true) {
+      case /vacation|trip|travel/i.test(iconchecker):
+        personsName = "&#9992; " + personsName;
+        break;
+      case /sick/i.test(iconchecker):
+        personsName = "&#129298; " + personsName;
+        break;
+      case /doctor|medical|surgery|hospital/i.test(iconchecker):
+        personsName = "&#127973; " + personsName;
+        break;
+      case /dentist|dental|ortho/i.test(iconchecker):
+        personsName = "&#128556; " + personsName;
+        break;
+      case /phone|call|skype|webex|gotomeeting|hangouts|google meet/i.test(iconchecker):
+        personsName = "&#128222; " + personsName;
+        break;
+      case /church|chapel|dimnent/i.test(iconchecker):
+        personsName = "&#9962; " + personsName;
+        break;
+      case /doughnut|donut/i.test(iconchecker):
+        personsName = "&#127849; " + personsName;
+        break;
+      case /breakfast|lunch|dinner|dining|food|eat/i.test(iconchecker):
+        personsName = "&#127869; " + personsName;
+        break;
+      case /walk/i.test(iconchecker):
+        personsName = "&#128694; " + personsName;
+        break;
+      case /tennis/i.test(iconchecker):
+        personsName = "&#127934; " + personsName;
+        break;
+      case /football/i.test(iconchecker):
+        personsName = "&#127944; " + personsName;
+        break;
+      case /baseball/i.test(iconchecker):
+        personsName = "&#9918; " + personsName;
+        break;
+      case /basketball/i.test(iconchecker):
+        personsName = "&#127936; " + personsName;
+        break;
+      case /soccer|futbol/i.test(iconchecker):
+        personsName = "&#9917; " + personsName;
+        break;
+      case /volleyball/i.test(iconchecker):
+        personsName = "&#127952; " + personsName;
+        break;
+      case /golf/i.test(iconchecker):
+        personsName = "&#127948; " + personsName;
+        break;
+      case /swim|pool/i.test(iconchecker):
+        personsName = "&#127946; " + personsName;
+        break;
+      case /workout|gym|sport/i.test(iconchecker):
+        personsName = "&#127947; " + personsName;
+        break;
     }
         
     if (!eventLocation) {
