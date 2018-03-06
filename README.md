@@ -36,5 +36,4 @@ This source is licensed as follows:
 
 - - -
 
-If you want to say thanks,  
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/white_img.png)](https://buymeacoff.ee/leoherzog)
+If you want to say thanks, [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/white_img.png)](https://buymeacoff.ee/leoherzog)
