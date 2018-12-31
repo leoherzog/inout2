@@ -4,7 +4,7 @@
 
 ### Basics
 
-This project is a rewrite of [my old web-based office in/out board](https://github.com/xd1936/inout), written in [Google Apps Script](https://developers.google.com/apps-script/) and powered by Google Calendar. It's a simple HTML table generator that formats and displays a hard-coded list of user's current statuses on Google Calendar.
+This project is a rewrite of [my old web-based office in/out board](https://github.com/leoherzog/inout), written in [Google Apps Script](https://developers.google.com/apps-script/) and powered by Google Calendar. It's a simple HTML table generator that formats and displays a hard-coded list of user's current statuses on Google Calendar.
 
 For each user, you get their **name** (with optional **phone extension**), **free/busy status**, **location**, and **duration of the event**. If the person has shared their calendar with you, you will see if they are free or busy, and if busy, event information available to you. When that user creates a new event in Google Calendar, "Available" vs. "Busy" events determine their status on the board, and "Public" vs. "Private" events determine if the details of the event are visible on the board. If you have more than one event going on at the same time, the board looks at the event that is ending latest.
 
