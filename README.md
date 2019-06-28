@@ -14,7 +14,7 @@ Because this code is hosted and authenticated server-side on Google Apps Script,
 
 1. Create a [new Google Apps Script project](https://script.google.com/) in Google Drive.
 2. Copy and paste the code from the `src` folder into six files in the Apps Script project.
-3. Go into **Resources** → **Advanced Google services...**, and turn on the **Calendar API v3**. Also follow the *Developer Console* link on this same screen and enable access to the **Google Calendar API** for this project ([more information](https://developers.google.com/apps-script/guides/services/advanced)).
+3. Go into **Resources** → **Advanced Google services...**, and turn on the **Calendar API**. You may have to click a link and accept some Terms of Service.
 4. Go into the `config.html` file and modify your location name, latitude, longitude (all for the weather), names, phone numbers, and email addresses, as well as whether or not you'd like to show phone extensions.
 5. Go into **Publish** → **Deploy as web app...**. Choose the level of access that you want to have on the in/out web page (Under **Who has access to the app:**), and click **Deploy**.
 
