@@ -154,7 +154,7 @@ function fillOutTable(freeBusyDetails) {
     // make a new variable to check for icons
     var iconchecker = eventName + " " + eventLocation;
     switch (true) {
-      case /vacation|trip|travel/i.test(iconchecker):
+      case /out\ of\ office|vacation|trip|travel|conference/i.test(iconchecker):
         personsName = "&#9992; " + personsName;
         break;
       case /sick/i.test(iconchecker):
@@ -166,7 +166,7 @@ function fillOutTable(freeBusyDetails) {
       case /dentist|dental|ortho/i.test(iconchecker):
         personsName = "&#128556; " + personsName;
         break;
-      case /phone|call|skype|webex|gotomeeting|hangouts|google meet/i.test(iconchecker):
+      case /phone|call|skype|webex|gotomeeting|hangouts|google meet|zoom/i.test(iconchecker):
         personsName = "&#128222; " + personsName;
         break;
       case /church|chapel|dimnent/i.test(iconchecker):
