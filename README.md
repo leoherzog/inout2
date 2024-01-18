@@ -18,13 +18,13 @@ Because this code is hosted and authenticated server-side on Google Apps Script,
 4. Go into the `config.html` file and modify your location name, latitude, longitude (all for the weather), names, phone numbers, and email addresses, as well as whether or not you'd like to show phone extensions.
 5. Go into **Publish** → **Deploy as web app...**. Choose the level of access that you want to have on the in/out web page (Under **Who has access to the app:**), and click **Deploy**.
 
-You're done! Share the link to your new In/Out board (the *Current web app URL*), or point a TV to look at that page.
+You're done! Share the link to your new In/Out board (the _Current web app URL_), or point a TV to look at that page.
 
 ### Updating
 
 When updates are released here on Github, simply copy and paste the newer files in the `src` folder (except your config file) to your project, and go to **Publish** → **Deploy as web app...**. Increment the version number (Pick "New" under the **Project Version** dropdown) and click **Deploy**. You should be good to go!
 
-- - -
+---
 
 Feel free to take a look at the source and adapt as you please. I would love to see some pull requests for improvements to the Javascript.
 
@@ -34,6 +34,6 @@ This source is licensed as follows:
 
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Javascript In/Out 2</span> is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
 
-- - -
+---
 
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/white_img.png)](https://buymeacoff.ee/leoherzog)
+If this was helpful to you, [buy me a tea](https://herzog.tech/$).
